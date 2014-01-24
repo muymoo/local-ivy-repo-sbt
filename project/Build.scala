@@ -1,7 +1,7 @@
 import sbt._
 import play.Project._
 import Keys._
-import IvyRepositories.{localRepoArtifacts, makeLocalRepoSettings}
+import IvyRepositories.{localDepRepo, localRepoArtifacts, makeLocalRepoSettings, localDepRepoCreated}
 
 object ApplicationBuild extends Build {
 
@@ -23,12 +23,11 @@ object ApplicationBuild extends Build {
   // Create Local Repo  
   
   lazy val s = playJavaSettings ++ publishSettings
-  lazy val publishedProjects = Seq(main)
+  lazy val publishedProjects: Seq[Project] = Seq(subModule)
   
-  lazy val main: Project = ( play.Project("local-test", appVersion, appDependencies, settings = s).settings(
-      localRepoArtifacts += "org.apache.ws.security" % "wss4j" % "1.6.9",
-      makeLocalRepoSettings(publishedProjects)
-      )
-  )
-          
+  lazy val subModule = play.Project("sub-module", appVersion, appDependencies, settings = s, path = file("modules/sub-module"))
+  
+  lazy val main = play.Project("local-test", appVersion, appDependencies, settings = s).settings(
+          localRepoArtifacts += "org.apache.ws.security" % "wss4j" % "1.6.9").settings(localDepRepo := new File("../test-repo/releases")).settings(makeLocalRepoSettings(publishedProjects):_*).settings(localDepRepoCreated(file("../test-repo/releases"))).aggregate(subModule)
+
 }
