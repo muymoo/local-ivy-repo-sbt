@@ -14,7 +14,7 @@ object ApplicationBuild extends Build {
   
   // So we can publish our jars to local play install
   lazy val publishSettings = Seq( 
-      organization := "com.ge.dsv",
+      organization := "com.acme.test",
       publishMavenStyle := true,
       publishTo := Some(Resolver.file("file", new File("../test-repo/releases")))
       
@@ -23,11 +23,11 @@ object ApplicationBuild extends Build {
   // Create Local Repo  
   
   lazy val s = playJavaSettings ++ publishSettings
-  //lazy val publishedProjects = Seq(main)
+  lazy val publishedProjects = Seq(main)
   
-  lazy val main: Project = ( play.Project("predix", appVersion, appDependencies, settings = s).settings(
-   //   localRepoArtifacts += "org.apache.ws.security" % "wss4j" % "1.6.9"//,
-    //  makeLocalRepoSettings(publishedProjects)
+  lazy val main: Project = ( play.Project("local-test", appVersion, appDependencies, settings = s).settings(
+      localRepoArtifacts += "org.apache.ws.security" % "wss4j" % "1.6.9",
+      makeLocalRepoSettings(publishedProjects)
       )
   )
           
