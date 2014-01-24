@@ -28,6 +28,6 @@ object ApplicationBuild extends Build {
   lazy val subModule = play.Project("sub-module", appVersion, appDependencies, settings = s, path = file("modules/sub-module"))
   
   lazy val main = play.Project("local-test", appVersion, appDependencies, settings = s).settings(
-          localRepoArtifacts += "org.apache.ws.security" % "wss4j" % "1.6.9").settings(localDepRepo := new File("../test-repo/releases")).settings(makeLocalRepoSettings(publishedProjects):_*).aggregate(subModule)
+          localRepoArtifacts += "org.apache.ws.security" % "wss4j" % "1.6.9").settings(makeLocalRepoSettings(publishedProjects):_*).aggregate(subModule)
 
 }
